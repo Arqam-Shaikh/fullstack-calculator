@@ -3,8 +3,10 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Literal
 
+# Create FastAPI application
 app = FastAPI(title="Full Stack Calculator API")
 
+# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -16,49 +18,54 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Request data model
+
+# Request model
 class Calculation(BaseModel):
     num1: float
     num2: float
     operator: Literal["+", "-", "*", "/"]
 
 
-# Home endpoint
+# Home route
 @app.get("/")
 def home():
     return {"message": "Calculator Backend is Running!"}
 
 
-# Health check endpoint
+# Health check route
 @app.get("/health")
 def health():
     return {"status": "healthy"}
 
 
-# Calculator endpoint
+# Calculation API
 @app.post("/calculate")
 def calculate(data: Calculation):
 
-    if data.operator == "+":
-        result = data.num1 + data.num2
+    num1 = data.num1
+    num2 = data.num2
+    operator = data.operator
 
-    elif data.operator == "-":
-        result = data.num1 - data.num2
+    if operator == "+":
+        result = num1 + num2
 
-    elif data.operator == "*":
-        result = data.num1 * data.num2
+    elif operator == "-":
+        result = num1 - num2
 
-    elif data.operator == "/":
-        if data.num2 == 0:
+    elif operator == "*":
+        result = num1 * num2
+
+    elif operator == "/":
+        if num2 == 0:
             raise HTTPException(
                 status_code=400,
                 detail="Cannot divide by zero"
             )
-        result = data.num1 / data.num2
+        result = num1 / num2
 
     return {
-        "num1": data.num1,
-        "num2": data.num2,
-        "operator": data.operator,
+        "num1": num1,
+        "num2": num2,
+        "operator": operator,
         "result": result
     }
