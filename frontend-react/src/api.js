@@ -1,4 +1,5 @@
-const API_URL = "http://127.0.0.1:8000";
+// Deployed FastAPI backend URL on Render
+const API_URL = "https://fullstack-calculator-api.onrender.com";
 
 // Send calculation request to Python backend
 export async function calculateOnBackend(num1, num2, operator) {
